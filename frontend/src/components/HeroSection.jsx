@@ -1,4 +1,6 @@
+import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+import { getCurrentUser } from "../authServices";
 
 const HeroSection = () => {
   const stats = [
@@ -7,6 +9,23 @@ const HeroSection = () => {
     { icon: "⭐", num: "4.9★", label: "USER RATING"       },
     { icon: "❤️", num: "100%", label: "FREE TO START"     },
   ];
+
+      const [user, setUser] = useState(null);
+
+  useEffect(() => {
+  const checkUser = () => {
+    const currentUser = getCurrentUser();
+    setUser(currentUser);
+  };
+
+  checkUser();
+
+  window.addEventListener("userChanged", checkUser);
+
+  return () => {
+    window.removeEventListener("userChanged", checkUser);
+  };
+}, []);
 
   return (
     <div className="absolute w-full min-h-screen flex flex-col items-center justify-center overflow-hidden bg-[#F5EDE4] px-6 py-20">
@@ -129,6 +148,7 @@ const HeroSection = () => {
 
         {/* CTA button */}
         <div className="hero-cta">
+          {user ? (
           <Link to="/create-outfit">
             <button
               className="cta-btn px-12 py-[18px] rounded-full border-none cursor-pointer text-white text-base font-bold tracking-wide transition-all duration-200"
@@ -140,6 +160,22 @@ const HeroSection = () => {
               Get Your Outfit → It's Free
             </button>
           </Link>
+          )
+          : (
+            <Link to="/login">
+            <button
+              className="cta-btn px-12 py-[18px] rounded-full border-none cursor-pointer text-white text-base font-bold tracking-wide transition-all duration-200"
+              style={{
+                background:"linear-gradient(135deg, #78081C 0%, #FF6F91 50%, #D65DB1 100%)",
+                boxShadow:"0 8px 28px rgba(255,111,145,0.40)",
+                fontFamily:"'DM Sans', sans-serif",
+              }}>
+              Login First
+            </button>
+          </Link>
+          )}
+    
+          
         </div>
 
         {/* Stats bar */}

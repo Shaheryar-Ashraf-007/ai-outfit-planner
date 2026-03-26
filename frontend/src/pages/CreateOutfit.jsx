@@ -354,7 +354,7 @@ export default function CreateOutfitPage() {
       />
 
       {/* ── Topbar ── */}
-      <div className="relative z-10 flex items-center justify-between px-6 mt-25">
+      <div className="relative z-10 flex items-center justify-between px-6 mt-12">
         <Link to="/" className="flex items-center gap-2 no-underline">
           <div
             className="w-9 h-9 rounded-xl flex items-center justify-center text-base"
