@@ -241,7 +241,7 @@ export default function Navbar() {
 
                     {/* menu items */}
                     {[
-                      { icon: "👗", label: "My Outfits", to: "/view-outfit" },
+                      { icon: "👗", label: "My Outfits", to: "/my-outfit" },
                     ].map((item) => (
                       <Link
                         key={item.to}

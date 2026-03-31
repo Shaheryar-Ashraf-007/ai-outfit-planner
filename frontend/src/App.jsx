@@ -5,6 +5,7 @@ import ViewOutfit from "./pages/view-outfit/[outfitId]/ViewOutfit.jsx";
 import LoginPage from "./components/Login.jsx";
 import SignupPage from "./components/Signup.jsx";
 import Navbar from "./components/Navbar.jsx";
+import MyOutfits from "./pages/my-outfits/MyOutfits.jsx";
 
 function RootLayout() {
   return (
@@ -22,6 +23,8 @@ const router = createBrowserRouter([
       { path: "/", element: <Dashboard /> },
       { path: "/create-outfit", element: <CreateOutfit /> },
       { path: "/view-outfit", element: <ViewOutfit /> },
+      { path: "/my-outfit", element: <MyOutfits /> },
+
       { path: "/login", element: <LoginPage /> },
       { path: "/signup", element: <SignupPage /> },
     ],

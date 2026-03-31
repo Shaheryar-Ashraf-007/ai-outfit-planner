@@ -91,40 +91,36 @@ export default function LoginPage() {
 
   /* ── Google login with @react-oauth/google ── */
   const googleLogin = useGoogleLogin({
-    onSuccess: async (tokenRes) => {
-      setGoogleLoad(true);
-      try {
-        /* fetch the user's Google profile */
-        const res = await axios.get("https://www.googleapis.com/oauth2/v3/userinfo", {
-          headers: { Authorization: `Bearer ${tokenRes.access_token}` },
-        });
-        const profile = res.data;
+  onSuccess: async (tokenRes) => {
+    setGoogleLoad(true);
+    try {
+      // 1️⃣ Send Google access token to your backend
+      const res = await axios.post("http://localhost:3000/api/auth/google-login", {
+        accessToken: tokenRes.access_token,
+      });
 
-        /* persist to localStorage so Navbar picks it up immediately */
-        const userObj = {
-          name:   profile.name,
-          email:  profile.email,
-          avatar: profile.picture,
-        };
-        localStorage.setItem("user",        JSON.stringify(userObj));
-        localStorage.setItem("userProfile", JSON.stringify(profile));
-        localStorage.setItem("token",       tokenRes.access_token);
+      // 2️⃣ Backend verifies Google token, creates/returns your server JWT
+      const { token, user } = res.data;
 
-        showToast("Welcome! ✨");
-        setTimeout(() => navigate("/"), 1000);
-      } catch (err) {
-        console.error("Google profile fetch failed:", err);
-        setApiError("Google sign-in failed. Please try again.");
-      } finally {
-        setGoogleLoad(false);
-      }
-    },
-    onError: (err) => {
-      console.error("Google login error:", err);
-      setApiError("Google sign-in was cancelled or failed.");
+      // 3️⃣ Save server JWT & user info in localStorage
+      localStorage.setItem("token", token);
+      localStorage.setItem("user", JSON.stringify(user));
+
+      showToast("Welcome! ✨");
+      setTimeout(() => navigate("/"), 1000);
+    } catch (err) {
+      console.error("Google login failed:", err);
+      setApiError("Google sign-in failed. Please try again.");
+    } finally {
       setGoogleLoad(false);
-    },
-  });
+    }
+  },
+  onError: (err) => {
+    console.error("Google login error:", err);
+    setApiError("Google sign-in was cancelled or failed.");
+    setGoogleLoad(false);
+  },
+});
 
   const gradBg   = { background:"linear-gradient(135deg,#78081C 0%,#FF6F91 50%,#D65DB1 100%)" };
   const gradText = { background:"linear-gradient(135deg,#78081C,#D65DB1)", WebkitBackgroundClip:"text", WebkitTextFillColor:"transparent" };
